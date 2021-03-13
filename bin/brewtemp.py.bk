@@ -1,0 +1,90 @@
+#!/usr/bin/python
+import os
+import time
+import json
+import sys
+import datetime
+
+# Logs time and temperatures to a file
+# Also writes latest temperatures to /var/www/html/index.html
+os.system('/sbin/modprobe w1-gpio')
+os.system('/sbin/modprobe w1-therm')
+
+datadir = os.path.join(sys.path[0],'..','data')
+wmfile = os.path.join(datadir,'wiremap.json')
+logfile = os.path.join(datadir,'brewlog.txt')
+
+w1path = '/sys/bus/w1/devices/'
+
+with open(wmfile,'r') as f:
+    sensors = json.load(f)
+
+htmlout = '/var/www/html/index.html'
+cssfile = os.path.join(datadir,'ferm.css')
+tmps = []
+for k,v in sensors.items():
+    dx = {}
+    dx['time'] = datetime.datetime.now().strftime('%Y%m%d:%H%M%S')
+    dx['colour'] = v
+    with open(os.path.join(w1path,k,'w1_slave'),'r') as f:
+        data = f.read()
+    dl = data.split('\n')
+    if dl[0][-3:] == 'YES':
+        tempst = dl[1].index('t=')
+        temperature = str(float(dl[1][tempst+2:])/1000)
+        colour = v
+        dx['temp'] = temperature
+    else:
+        dx['temp'] = 'ERROR'
+    tmps.append(dx)    
+
+with open(htmlout,'w') as fh:
+  fh.write('<html>')
+  fh.write('<head>')
+  fh.write('<style>')
+  with open(cssfile,'r') as fr:
+    x = fr.read()
+  fh.write(x)
+  fh.write('</style></head>')
+  fh.write('<body><table id="temps">')
+  fh.write('<tr><th>Colour</th><th>Temperature (deg C)</th>')
+
+for x in tmps:
+    c = x['colour']
+    t = x['time']
+    m = x['temp']
+    with open(htmlout,'a') as fh:
+        fh.write('<tr><td style="background-color:'+c+'">'+c+'</td><td>'+m+'</td></tr>')
+        
+    with open(logfile,'a') as fl:
+        fl.write(t+'|'+c+'|'+m+'\n')
+
+with open(htmlout,'a') as fh:
+    fh.write('</table>')
+
+# Analyse the data in data/bubble.log, get amount of bubbles in last hour, 30, 10, 5 minutes
+bfile = os.path.join(datadir,'bubble.log')
+with open(bfile,'r') as f:
+    bdata = f.readlines()
+
+f1=0
+f2=0
+
+for x in bdata:
+    ferm = x.split('|')[0]
+    t = x.split('|')[1].strip()
+    td = datetime.datetime.strptime(t,'%Y%m%d:%H%M%S')
+    if ferm == 'ferm1' and td > datetime.datetime.now() - datetime.timedelta(minutes=5):
+        f1+=1
+    if ferm == 'ferm2' and td > datetime.datetime.now() - datetime.timedelta(minutes=5):
+        f2+=2
+
+with open(htmlout,'a') as fh:
+    fh.write('<div id="f1">Fermenter 1 has bubbled '+str(f1)+' time(s) in the last 5 minutes</div>\n')
+    fh.write('<div id="f2">Fermenter 2 has bubbled '+str(f2)+' time(s) in the last 5 minutes</div>\n')
+    fh.write('<div id="upd">Last updated at:'+datetime.datetime.now().strftime('%H:%M %d %b')+'</div>\n')
+    fh.write('</body></html>')
+
+# Extend plotly traces
+import plotly.plotly as py
+
