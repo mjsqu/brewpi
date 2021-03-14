@@ -24,5 +24,4 @@ while True:
     tmps = ot.getall()
     print datetime.datetime.now()
     for t in tmps:
-        if t['colour'] == 'green':
-          print(t['temperature'])
+          print(t['colour']+" "+t['temperature'])

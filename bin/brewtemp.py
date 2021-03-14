@@ -16,7 +16,7 @@ os.system('/sbin/modprobe w1-therm')
 
 datadir = os.path.join(sys.path[0],'..','data')
 wmfile = os.path.join(datadir,'wiremap.json')
-logfile = os.path.join(datadir,'brewlog.txt')
+q!logfile = os.path.join(datadir,'brewlog.txt')
 b5file = os.path.join(datadir,'b5.json')
 htmlout = os.path.join(r'/var/www/html/','index.html')
 
