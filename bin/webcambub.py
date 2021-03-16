@@ -16,8 +16,8 @@ sf = '%Y%m%d:%H%M%S'
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
-RATE = 44100
-CHUNK = 44100
+RATE = 16000
+CHUNK = RATE
 
 sf = "%Y%m%d:%H%M%S" 
 
