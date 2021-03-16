@@ -37,7 +37,7 @@ def openstream(webcam_index):
     """
     stream = audio.open(format=FORMAT, channels=CHANNELS,
                 rate=RATE, input=True,
-                frames_per_buffer=CHUNK*,input_device_index=webcam_index)
+                frames_per_buffer=CHUNK,input_device_index=webcam_index)
     return stream
 
 def samplenum(webcam_index,RECORD_SECONDS):
@@ -46,16 +46,10 @@ def samplenum(webcam_index,RECORD_SECONDS):
     frames = []
     numdata = []
  
-<<<<<<< HEAD
-    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS*3)):
-        data = s.read(CHUNK*3)
-        numdata.append(rms(data))
-=======
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         data = s.read(CHUNK)
         numpydata = np.fromstring(data, dtype=np.int16)
         numdata.append(numpydata.max())
->>>>>>> parent of 6d99647... changed webcambub to not use numpy
         frames.append(data)
 
     s.stop_stream()
