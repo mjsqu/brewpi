@@ -3,10 +3,22 @@ import pyaudio
 import datetime
 import wave
 import os
-import numpy as np
+import struct,math
+#import numpy as np
 from datetime import datetime
 
+def rms( data ):
+    count = len(data)/2
+    format = "%dh"%(count)
+    shorts = struct.unpack( format, data )
+    sum_squares = 0.0
+    for sample in shorts:
+        n = sample * (1.0/32768)
+        sum_squares += n*n
+    return math.sqrt( sum_squares / count )
+
 strf = '%Y%m%d_%H%M%S'
+
 dst = datetime.now().strftime(strf)
 
 p = pyaudio.PyAudio()
@@ -17,13 +29,12 @@ for i in range(p.get_device_count()):
     devinfo = p.get_device_info_by_index(i)
     if devinfo['maxInputChannels'] > 0:
         print i# Record 10 seconds of sound to a file
-        if devinfo['name'][:6] == 'Webcam':
+        if devinfo['name'][:7] == 'USB Cam':
             webcam_index = i
-
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
-RATE = 44100
-CHUNK = 44100
+RATE = 16000 
+CHUNK = RATE 
 RECORD_SECONDS = 20
 WAVE_OUTPUT_FILENAME = r'/tmp/bub_'+dst+'.wav'
 
@@ -42,9 +53,10 @@ frames = []
  
 for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
     data = stream.read(CHUNK)
-    numpydata = np.fromstring(data, dtype=np.int16)
-    loudest = numpydata.max()
-    print loudest
+    print(rms(data))
+#    numpydata = np.fromstring(data, dtype=np.int16)
+#    loudest = numpydata.max()
+#    print loudest
     frames.append(data)
  
 # stop Recording
