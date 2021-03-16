@@ -8,7 +8,7 @@ import sys
 from datetime import datetime as dt
 import pyaudio
 import wave
-import numpy as np
+import struct,math
 
 datadir = os.path.join(sys.path[0],'..','data')
 psfile = os.path.join(datadir,'bubbleprocess.json')
@@ -22,6 +22,18 @@ CHUNK = 44100
 sf = "%Y%m%d:%H%M%S" 
 
 audio = pyaudio.PyAudio()
+
+def rms( data ):
+    """ Calculates RMS for sound data
+    """
+    count = len(data)/2
+    format = "%dh"%(count)
+    shorts = struct.unpack( format, data )
+    sum_squares = 0.0
+    for sample in shorts:
+        n = sample * (1.0/32768)
+        sum_squares += n*n
+    return math.sqrt( sum_squares / count )
 
 def deviceinfo():
     """ Returns all device info
@@ -48,8 +60,7 @@ def samplenum(webcam_index,RECORD_SECONDS):
  
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         data = s.read(CHUNK)
-        numpydata = np.fromstring(data, dtype=np.int16)
-        numdata.append(numpydata.max())
+        numdata.append(rms(data))
         frames.append(data)
 
     s.stop_stream()

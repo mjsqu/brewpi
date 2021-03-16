@@ -4,7 +4,6 @@ import datetime
 import wave
 import os
 import struct,math
-#import numpy as np
 from datetime import datetime
 
 def rms( data ):
