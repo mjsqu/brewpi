@@ -54,9 +54,6 @@ frames = []
 for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
     data = stream.read(CHUNK)
     print(rms(data))
-#    numpydata = np.fromstring(data, dtype=np.int16)
-#    loudest = numpydata.max()
-#    print loudest
     frames.append(data)
  
 # stop Recording
