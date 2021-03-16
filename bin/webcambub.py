@@ -49,7 +49,7 @@ def openstream(webcam_index):
     """
     stream = audio.open(format=FORMAT, channels=CHANNELS,
                 rate=RATE, input=True,
-                frames_per_buffer=CHUNK*3,input_device_index=webcam_index)
+                frames_per_buffer=CHUNK*,input_device_index=webcam_index)
     return stream
 
 def samplenum(webcam_index,RECORD_SECONDS):
