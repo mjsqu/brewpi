@@ -12,7 +12,7 @@ while True:
     vol = wc.rms(data)
     if vol > ferm1:
        with open(r'../www/bubwww.log','a+') as f:
-         f.write('ferm1|'+datetime.now().strftime(wc.sf)+'\n')
+         f.write('ferm1|'+wc.dt.now().strftime(wc.sf)+'\n')
  
 # stop Recording
 s.stop_stream()
