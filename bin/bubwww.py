@@ -11,7 +11,7 @@ while True:
     data = s.read(wc.CHUNK)
     vol = wc.rms(data)
     if vol > ferm1:
-       with open(r'/home/pi/temperature/www/bubwww.log','a+') as f:
+       with open(r'../www/bubwww.log','a+') as f:
          f.write('ferm1|'+datetime.now().strftime(wc.sf)+'\n')
  
 # stop Recording
