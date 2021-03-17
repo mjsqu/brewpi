@@ -10,7 +10,7 @@ s = wc.openstream(1)
 while True:
     data = s.read(wc.CHUNK)
     vol = wc.rms(data)
-    if loudest > ferm1:
+    if vol > ferm1:
        with open(r'/home/pi/temperature/www/bubwww.log','a+') as f:
          f.write('ferm1|'+datetime.now().strftime(wc.sf)+'\n')
  
