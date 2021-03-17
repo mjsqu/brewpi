@@ -5,6 +5,8 @@ import webcambub as wc
 from time import sleep
 ferm1 = 0.005
 
+s = wc.openstream(1)
+
 while True:
     data = s.read(wc.CHUNK)
     vol = rms(data)
