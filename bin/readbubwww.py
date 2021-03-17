@@ -1,11 +1,11 @@
 #!/usr/bin/python3
-import path
+import os
 import json
 from datetime import datetime
 
 rootdir = "/home/pi/brewpi"
-bubwww = path.join(rootdir,'www','bubwww.txt')
-bubjson = path.join(rootdir,'www','bubwww.json')
+bubwww = os.path.join(rootdir,'www','bubwww.txt')
+bubjson = os.path.join(rootdir,'www','bubwww.json')
 
 date_format = '%Y%m%d:%H%M'
 
