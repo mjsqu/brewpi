@@ -27,7 +27,7 @@ webcam_index = 0
 for i in range(p.get_device_count()):
     devinfo = p.get_device_info_by_index(i)
     if devinfo['maxInputChannels'] > 0:
-        print i# Record 10 seconds of sound to a file
+        print(i) # Record 10 seconds of sound to a file
         if devinfo['name'][:7] == 'USB Cam':
             webcam_index = i
 FORMAT = pyaudio.paInt16
@@ -46,7 +46,7 @@ stream = audio.open(format=FORMAT, channels=CHANNELS,
                 rate=RATE, input=True,
                 frames_per_buffer=CHUNK,input_device_index=webcam_index)
 
-print 'Recording and displaying volumes'
+print('Recording and displaying volumes')
 
 frames = []
  
