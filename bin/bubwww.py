@@ -8,7 +8,7 @@ ferm1 = 0.005
 s = wc.openstream(1)
 
 while True:
-    data = s.read(wc.CHUNK)
+    data = s.read(wc.CHUNK,exception_on_overflow=False)
     vol = wc.rms(data)
     if vol > ferm1:
        with open(r'../www/bubwww.txt','a+') as f:

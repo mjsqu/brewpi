@@ -14,7 +14,9 @@ with open(bubwww,'r') as f:
 
 res = {}
 for stat in bubdat:
-    dt = datetime.strptime(stat[6:19],datet_format)
+    dt = stat[6:19]
+    if dt not in res.keys():
+       res[dt] = 0
     res[dt] += 1
 
 with open(bubjson,'w') as f:
